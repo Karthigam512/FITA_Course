@@ -24,6 +24,7 @@ class TestLogin:
             message_xpath = "//*[@id='content']/div[3]/div/div[1]/div/form/div[5]"
             login_page.display_message(message_xpath)
             driver.save_screenshot(f"testcase_{username}.png")
+            time.sleep(5)
             login_page.reload()
         driver.quit()
 
