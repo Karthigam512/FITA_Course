@@ -25,3 +25,4 @@ class LoginPage:
     def display_message(self, message_xpath):
         text_message = self.driver.find_element(By.XPATH, message_xpath).text
         print(text_message)
+        return text_message
