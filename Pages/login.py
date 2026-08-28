@@ -1,28 +1,34 @@
 from selenium.webdriver.common.by import By
+from Pages.BasePage import BasePage
+from Base.config import TestData
 
 
-class LoginPage:
+class LoginPage(BasePage):
+    USERNAME_FIELD = (By.ID, "email")
+    PASSWORD_FIELD = (By.ID, "password")
+    LOGIN_BTN = (By.CSS_SELECTOR, "button.btn.btn-primary.btn-lg")
+    MESSAGE = (By.XPATH, "//*[@id='content']/div[3]/div/div[1]/div/form/div[5]")
 
     def __init__(self, driver):
-        self.driver = driver
-        # Locators
-        self.username_input = (By.ID, "email")
-        self.password_input = (By.ID, "password")
-        self.login_button = (By.CSS_SELECTOR, "#content > div.container.py-5.py-sm-7 > div > div.card.card-lg.mb-5.mt-6.mt-lg-0 > div > form > div.d-grid > button")
+        super().__init__(driver)
+        self.driver.get(TestData.BASE_URL)
 
-    def enter_username(self, username):
-        self.driver.find_element(*self.username_input).send_keys(username)
+    def get_login_page_title(self, title):
+        return self.do_get_title(title)
 
-    def enter_password(self, password):
-        self.driver.find_element(*self.password_input).send_keys(password)
-
-    def click_login(self):
-        self.driver.find_element(*self.login_button).click()
+    def do_login(self, username, password):
+        self.do_send_keys(self.USERNAME_FIELD, username)
+        self.do_send_keys(self.PASSWORD_FIELD, password)
+        self.do_click(self.LOGIN_BTN)
 
     def reload(self):
-        self.driver.get("https://imeetify.com/login")
+        self.driver.refresh()
 
-    def display_message(self, message_xpath):
-        text_message = self.driver.find_element(By.XPATH, message_xpath).text
+    def display_message(self, message_locator):
+        text_message = self.do_get_element_text(message_locator)
         print(text_message)
-        return text_message
+        return bool(text_message)
+
+    def do_get_screenshot(self, filename):
+        self.driver.save_screenshot(filename)
+

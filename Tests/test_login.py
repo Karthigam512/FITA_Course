@@ -1,31 +1,33 @@
-from Base.config import BaseDriver
+import Pages.login
+from Base.config import TestData
 from Pages.login import LoginPage
+from Tests.test_base import BaseTest
 from Util.genericReader import get_reader
 import pytest
 import time
 
 
-class TestLogin:
-    @pytest.mark.parametrize("filepath",
-                             ["C:/Users/karth/Project/pythonProjectTEST/Pages/credentials.csv",
-                              "C:/Users/karth/Project/pythonProjectTEST/Util/userdata.xlsx"])
+class TestLogin(BaseTest):
+
+    def test_driver_title(self):
+        self.page = LoginPage(self.driver)
+        flag = self.page.get_login_page_title(TestData.PAGE_TITLE)
+        assert flag
+
+    @pytest.mark.parametrize("filepath", [TestData.USERDATA_PATH_CSV, TestData.USERDATA_PATH_XL])
     def test_valid_login(self, filepath):
-        base = BaseDriver()
-        driver = base.get_driver()
-        login_page = LoginPage(driver)
-        csv_data = get_reader(filepath).read_userdata()
-        print(csv_data)
-        for col1, col2 in csv_data:
+        self.page = LoginPage(self.driver)
+        userdata = get_reader(filepath).read_userdata()
+        print(userdata)
+        for col1, col2 in userdata:
             username = col1
             password = col2
             print(f"Running test for: {username}")
-            login_page.enter_username(username)
-            login_page.enter_password(password)
-            login_page.click_login()
+            self.page.do_login(username, password)
             time.sleep(3)
-            message_xpath = "//*[@id='content']/div[3]/div/div[1]/div/form/div[5]"
-            assert login_page.display_message(message_xpath) is not None
-            driver.save_screenshot(f"testcase_{username}.png")
+            flag = self.page.display_message(LoginPage.MESSAGE)
+            assert flag is True
+            self.page.do_get_screenshot(f"testcase_{username}.png")
             time.sleep(2)
-            login_page.reload()
-        driver.quit()
+            self.page.reload()
+
