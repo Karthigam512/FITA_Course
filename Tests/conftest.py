@@ -14,7 +14,7 @@ def init_driver(request):
     _options.add_argument("--window-size=1920,1080")
     if request.param == "chrome":
         _service = ChromeService(ChromeDriverManager().install())
-        web_driver = webdriver.Chrome(service=_service, options=_options)
+        web_driver = webdriver.Chrome(service=_service)
     elif request.param == "firefox":
         _service = FirefoxService(GeckoDriverManager().install())
         web_driver = webdriver.Firefox(service=_service, options=_options)
