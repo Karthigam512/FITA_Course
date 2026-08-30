@@ -31,4 +31,3 @@ class LoginPage(BasePage):
 
     def do_get_screenshot(self, filename):
         self.driver.save_screenshot(filename)
-

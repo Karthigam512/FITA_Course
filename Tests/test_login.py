@@ -1,4 +1,3 @@
-import Pages.login
 from Base.config import TestData
 from Pages.login import LoginPage
 from Tests.test_base import BaseTest
@@ -30,4 +29,3 @@ class TestLogin(BaseTest):
             self.page.do_get_screenshot(f"testcase_{username}.png")
             time.sleep(2)
             self.page.reload()
-
