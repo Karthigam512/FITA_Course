@@ -1,26 +1,25 @@
 from Base.config import TestData
 from Pages.login import LoginPage
 from Tests.test_base import BaseTest
-from Util.genericReader import get_reader
+from Util.genericReader import GetCred
 import pytest
 import time
 
 
 class TestLogin(BaseTest):
 
-    def test_driver_title(self):
+    def test_login_page_title(self):
         self.page = LoginPage(self.driver)
-        flag = self.page.get_login_page_title(TestData.PAGE_TITLE)
+        flag = self.page.get_login_page_title(LoginPage.PAGE_TITLE)
         assert flag
 
-    @pytest.mark.parametrize("filepath", [TestData.USERDATA_PATH_CSV, TestData.USERDATA_PATH_XL])
+    @pytest.mark.parametrize("filepath", [TestData.USERDATA_PATH_CSV])
     def test_valid_login(self, filepath):
         self.page = LoginPage(self.driver)
-        userdata = get_reader(filepath).read_userdata()
-        print(userdata)
-        for col1, col2 in userdata:
-            username = col1
-            password = col2
+        self.file = GetCred(filepath)
+        data_count = self.file.get_data_count()
+        for index in range(data_count):
+            username, password = self.file.get_credentials(index)
             print(f"Running test for: {username}")
             self.page.do_login(username, password)
             time.sleep(3)

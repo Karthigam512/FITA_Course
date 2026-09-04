@@ -10,6 +10,7 @@ class CSVDataRead:
         data = []
         with open(self.filepath, newline='') as file:
             csv_reader = csv.reader(file)
+            next(csv_reader, None)
             for row in csv_reader:
                 data.append(row)
         return data
@@ -45,3 +46,19 @@ def get_reader(filepath: str):
         return XLDataRead(filepath)
     else:
         raise ValueError("Unsupported file format")
+
+
+class GetCred:
+
+    def __init__(self, filepath):
+        self.filepath = filepath
+
+    def get_data_count(self):
+        userdata = get_reader(self.filepath).read_userdata()
+        return len(userdata)
+
+    def get_credentials(self, index):
+        userdata = get_reader(self.filepath).read_userdata()
+        username = userdata[index][0]
+        password = userdata[index][1]
+        return username, password

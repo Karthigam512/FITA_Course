@@ -23,3 +23,10 @@ class BasePage:
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.title_is(title))
         return self.driver.title
+
+    def do_get_url(self, url):
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.url_to_be(url))
+        return self.driver.current_url
+
+

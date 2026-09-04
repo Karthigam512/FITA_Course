@@ -1,13 +1,18 @@
+import time
+
 from selenium.webdriver.common.by import By
+from Pages.HomePage import HomePage
+from Util.genericReader import get_reader
 from Pages.BasePage import BasePage
 from Base.config import TestData
 
 
 class LoginPage(BasePage):
-    USERNAME_FIELD = (By.ID, "email")
+    USERNAME_FIELD = (By.ID, "username")
     PASSWORD_FIELD = (By.ID, "password")
-    LOGIN_BTN = (By.CSS_SELECTOR, "button.btn.btn-primary.btn-lg")
-    MESSAGE = (By.XPATH, "//*[@id='content']/div[3]/div/div[1]/div/form/div[5]")
+    LOGIN_BTN = (By.ID, "submit")
+    MESSAGE = (By.ID, "error")
+    PAGE_TITLE = "Test Login | Practice Test Automation"
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -19,7 +24,9 @@ class LoginPage(BasePage):
     def do_login(self, username, password):
         self.do_send_keys(self.USERNAME_FIELD, username)
         self.do_send_keys(self.PASSWORD_FIELD, password)
+        time.sleep(3)
         self.do_click(self.LOGIN_BTN)
+        return HomePage(self.driver)
 
     def reload(self):
         self.driver.refresh()
